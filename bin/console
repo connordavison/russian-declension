@@ -1,0 +1,28 @@
+#!/usr/bin/env php
+<?php
+
+use App\Command\Asker\NounCaseAsker;
+use App\Command\GameCommand;
+use App\GenderGuesser;
+use App\Import\Badestrand\DeclensionImporter;
+use App\Import\Badestrand\Importer;
+use App\Import\Badestrand\NounImporter;
+use App\Repository\NounRepository;
+use Symfony\Component\Console\Application;
+
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+$declensionImporter = new DeclensionImporter();
+$genderGuesser = new GenderGuesser();
+$nounImporter = new NounImporter($declensionImporter, $genderGuesser);
+$importer = new Importer($nounImporter);
+$nouns = $importer->import(dirname(__DIR__) . '/data/nouns.csv');
+$nounRepository = new NounRepository($nouns);
+
+$nounCaseAsker = new NounCaseAsker($nounRepository, new App\Dice);
+
+$app = new Application();
+$app->addCommands([
+    new GameCommand($nounCaseAsker),
+]);
+$app->run();

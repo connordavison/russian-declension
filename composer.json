@@ -1,0 +1,12 @@
+{
+    "name": "cdavison/russian-declension",
+    "description": "A tool for practising Russian declension.",
+    "type": "app",
+    "autoload": {
+        "psr-4": {"App\\": "src/"}
+    },
+    "require": {
+        "league/csv": "^9.4",
+        "symfony/console": "^4.0"
+    }
+}
